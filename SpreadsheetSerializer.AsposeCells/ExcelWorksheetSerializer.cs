@@ -6,27 +6,53 @@ using System.IO;
 
 namespace SpreadsheetSerializer.AsposeCells
 {
-    public class ExcelTabCreator<T> : ISpreadsheetSerializer<T>
+    public class ExcelWorksheetSerializer<T> : ISpreadsheetSerializer<T>, IWorksheetSerializer
     {
-        //public Aspose.Cells.License AsposeLicense { get; set; } = new Aspose.Cells.License();
-        private Aspose.Cells.Workbook workbook;
+        private WorkbookCreator workbook;
+        private List<T> recordsToSerialize;
+        private List<T> deserializedRecords;
+
+        public string WorkbookName { get; set; } = "";
         public string ResourceName { get; set; } = "spreadsheet.xlsx";
 
-        public ExcelTabCreator()
+
+        public ExcelWorksheetSerializer()
         {
-            //AsposeLicense.SetLicense("Aspose.Total.lic");
+        }
+
+        public ExcelWorksheetSerializer(List<T> recordsToSerialize)
+        {
+            this.recordsToSerialize = recordsToSerialize;
+        }
+
+        public ExcelWorksheetSerializer(ref List<T> listReceivingDeserializedRecords)
+        {
+            this.deserializedRecords = listReceivingDeserializedRecords;
+        }
+
+        public ExcelWorksheetSerializer<T> WithWorkbookName(string workbookName)
+        {
+            // TODO: handle full file path
+            string workbookNameWithoutExtension = workbookName;
+            if (workbookName.EndsWith(".xlsx"))
+            {
+                workbookNameWithoutExtension = Path.GetFileNameWithoutExtension(workbookName);
+            }
+
+            this.WorkbookName = workbookNameWithoutExtension;
+            return this;
         }
 
         public void Serialize(List<T> records, string spreadsheetName)
         {
             // Create excel workbook
-            using (workbook = new Aspose.Cells.Workbook())
+            using (workbook = new WorkbookCreator(spreadsheetName))
             {
-                CreateExcelTabForRecords(records);
+                CreateExcelTabForRecords(records, typeof(T).Name);
+                workbook.RemoveDefaultTab();
 
-                // Save workbook
-                File.Delete(spreadsheetName + ".xlsx");
-                workbook.Save(spreadsheetName + ".xlsx");
+                workbook.Delete();
+                workbook.Save();
             }
             workbook = null;
         }
@@ -94,11 +120,11 @@ namespace SpreadsheetSerializer.AsposeCells
             return listOfSchedules;
         }
 
-        private void CreateExcelTabForRecords(List<T> records)
+        private void CreateExcelTabForRecords(List<T> records, string tabName)
         {
             var dataTableCreator = new DataTableConverter<T>();
             var dataTable = dataTableCreator.CreateDataTableFor(records);
-            WriteDataTableToExcelTab(dataTable, typeof(T).Name);
+            WriteDataTableToExcelTab(dataTable, tabName);
         }
 
         private void WriteDataTableToExcelTab(DataTable dataTable, string tabName)
@@ -108,6 +134,18 @@ namespace SpreadsheetSerializer.AsposeCells
 
             sheet.Cells.ImportData(dataTable, 0, 0, dataOptions);
             sheet.AutoFitColumns();
+        }
+
+        public void Serialize()
+        {
+            string tabName = typeof(T).Name;
+            Serialize(recordsToSerialize, tabName);
+        }
+
+        public void Deserialize()
+        {
+            string tabName = typeof(T).Name;
+            deserializedRecords = Deserialize(tabName);
         }
     }
 }

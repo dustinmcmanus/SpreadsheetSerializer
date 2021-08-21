@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
-using SpreadsheetSerializer;
 
 namespace SpreadsheetSerializer.Examples
 {
@@ -31,8 +30,9 @@ namespace SpreadsheetSerializer.Examples
             user2.EmailAddress = "jill@example.com";
             users.Add(user2);
 
-            var spreadsheetCreator = new AsposeCells.ExcelTabCreator<User>();
-            spreadsheetCreator.Serialize(users, "users.xlsx");
+            SpreadsheetSerializer.AsposeCells.License.SetLicense("Aspose.Total.lic");
+            ISpreadsheetSerializer<User> spreadsheetCreator = new AsposeCells.ExcelWorksheetSerializer<User>().WithWorkbookName("MyWorkbook");
+            spreadsheetCreator.Serialize(users, "users");
         }
 
         private void button_Click(object sender, RoutedEventArgs e)
