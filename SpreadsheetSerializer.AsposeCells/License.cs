@@ -6,7 +6,7 @@
 
         public static void SetLicense(string filePath)
         {
-            AsposeLicense.SetLicense(filePath); // "Aspose.Total.lic"
+            AsposeLicense.SetLicense(filePath);
         }
     }
 }

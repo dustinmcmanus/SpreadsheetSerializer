@@ -1,38 +1,10 @@
-﻿using System.IO;
-
-namespace SpreadsheetSerializer.AsposeCells
+﻿namespace SpreadsheetSerializer.AsposeCells
 {
-    public class WorkbookCreator : Aspose.Cells.Workbook
+    public class WorkbookCreator
     {
-        private readonly string workbookName;
-
-        public WorkbookCreator(string workbookName)
+        public static AsposeWorkbook CreateWorkbookWithName(string workbookName)
         {
-            this.workbookName = workbookName;
-
-        }
-
-        //public WorkbookCreator CreateWorkbook(string workbookName)
-        //{
-        //    this.workbookName = workbookName;
-        //    var workbook = new WorkbookCreator();
-        //    return workbook;
-        //}
-
-        public void Delete()
-        {
-            File.Delete(workbookName + ".xlsx");
-        }
-
-        public void RemoveDefaultTab()
-        {
-            var sheet = Worksheets["Sheet1"];
-            Worksheets.RemoveAt(sheet.Index);
-        }
-
-        public void Save()
-        {
-            Save(workbookName + ".xlsx");
+            return new AsposeWorkbook().WithWorkbookName(workbookName);
         }
     }
 }

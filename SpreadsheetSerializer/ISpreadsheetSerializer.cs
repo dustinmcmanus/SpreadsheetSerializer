@@ -6,6 +6,6 @@ namespace SpreadsheetSerializer
     {
         void Serialize(List<T> records, string spreadsheetName);
 
-        List<T> Deserialize(string tabName = "");
+        List<T> Deserialize(string worksheetName = "");
     }
 }
