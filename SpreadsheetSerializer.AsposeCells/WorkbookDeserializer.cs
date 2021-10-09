@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -7,33 +8,24 @@ namespace SpreadsheetSerializer.AsposeCells
 {
     public class WorkbookDeserializer<T>
     {
-        public string WorkbookName { get; set; } = "";
         private List<WorksheetDeserializer> worksheetDeserializers = new List<WorksheetDeserializer>();
+        private JsonConverter jsonConverter;
 
         public WorkbookDeserializer()
         {
         }
 
-        public WorkbookDeserializer(string workbookName)
+        public WorkbookDeserializer<T> WithNullStringJsonConverter()
         {
-            SetWorkbookName(workbookName);
-        }
-
-        public WorkbookDeserializer<T> WithWorkbookName(string workbookName)
-        {
-            SetWorkbookName(workbookName);
+            this.jsonConverter = new JsonConverterWithNullStrings();
             return this;
         }
 
-        private void SetWorkbookName(string workbookName)
+        // allow user to override with any custom NewtonSoft JsonConverter
+        public WorkbookDeserializer<T> WithJsonConverter(JsonConverter jsonConverter)
         {
-            string workbookNameWithoutExtension = workbookName;
-            if (workbookName.EndsWith(".xlsx"))
-            {
-                workbookNameWithoutExtension = Path.GetFileNameWithoutExtension(workbookName);
-            }
-
-            this.WorkbookName = workbookNameWithoutExtension;
+            this.jsonConverter = jsonConverter;
+            return this;
         }
 
         private List<WorksheetDeserializer> GetWorksheetDeserializers(T workbookClass)
@@ -55,43 +47,59 @@ namespace SpreadsheetSerializer.AsposeCells
                 }
 
                 var worksheetCreator = new WorksheetDeserializer(worksheetName, propertyListValue, genericListType);
+
+                if (jsonConverter != null)
+                {
+                    worksheetCreator.SetJsonConverter(jsonConverter);
+                }
                 deserializers.Add(worksheetCreator);
             }
 
             return deserializers;
         }
 
-        //public T Deserialize(string workbookName = "")
-        //{
-        //    throw new System.NotImplementedException();
-        //}
-
-        public void Deserialize(ref T workbookClass, string workbookFilePath)
+        public T Deserialize(string workbookFilePath)
         {
+            T workbookClass = (T)Activator.CreateInstance(typeof(T));
             worksheetDeserializers = GetWorksheetDeserializers(workbookClass);
+            DeserializeWorkboookFromFilePath(workbookFilePath);
+            return workbookClass;
+        }
+
+        public T Deserialize(Stream workbookStream)
+        {
+            T workbookClass = (T)Activator.CreateInstance(typeof(T));
+            worksheetDeserializers = GetWorksheetDeserializers(workbookClass);
+            DeserializeWorkboookFromStream(workbookStream);
+            return workbookClass;
+        }
+
+        private void DeserializeWorkboookFromFilePath(string workbookFilePath)
+        {
             using (var workbook = WorkbookRetriever.GetWorkbookFromFilePath(workbookFilePath))
             {
-                foreach (var worksheetDeserializer in worksheetDeserializers)
-                {
-                    worksheetDeserializer.Deserialize(workbook);
-                }
+                PopulateWorkbookClassListsFromWorkbook(workbook);
             }
         }
 
-        public void DeserializeWithNullStrings(ref T workbookClass, string workbookFilePath)
+        private void DeserializeWorkboookFromStream(Stream workbookStream)
         {
-            worksheetDeserializers = GetWorksheetDeserializers(workbookClass);
-            using (var workbook = WorkbookRetriever.GetWorkbookFromFilePath(workbookFilePath))
+            using (var workbook = WorkbookRetriever.GetWorkbookFromStream(workbookStream))
             {
-                foreach (var worksheetDeserializer in worksheetDeserializers)
-                {
-                    worksheetDeserializer.DeserializeWithNullStrings(workbook);
-                }
+                PopulateWorkbookClassListsFromWorkbook(workbook);
+            }
+        }
+
+        private void PopulateWorkbookClassListsFromWorkbook(AsposeWorkbook workbook)
+        {
+            foreach (var worksheetDeserializer in worksheetDeserializers)
+            {
+                worksheetDeserializer.Deserialize(workbook);
             }
         }
 
         // https://stackoverflow.com/questions/2493215/create-list-of-variable-type
-        public IList CreateList(Type genericListType)
+        private IList CreateList(Type genericListType)
         {
             Type listType = typeof(List<>).MakeGenericType(genericListType);
             return (IList)Activator.CreateInstance(listType);

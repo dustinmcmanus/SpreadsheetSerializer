@@ -13,41 +13,47 @@ namespace SpreadsheetSerializer.AsposeCells
         private readonly string worksheetName;
         private readonly Type genericListType;
         private readonly IList list;
+        private JsonConverter jsonConverter;
 
         public WorksheetDeserializer(string worksheetName, IList list, Type genericListType)
         {
             this.worksheetName = worksheetName ?? throw new ArgumentNullException(nameof(worksheetName));
             this.list = list ?? throw new ArgumentNullException(nameof(list));
             this.genericListType = genericListType ?? throw new ArgumentNullException(nameof(genericListType));
+            jsonConverter = new DefaultJsonConverter();
+        }
+
+        public void SetJsonConverter(JsonConverter jsonConverter)
+        {
+            this.jsonConverter = jsonConverter;
         }
 
         public void Deserialize(AsposeWorkbook workbook)
         {
-            var formatConverter = new FormatConverter();
             list.Clear();
-            AddWorkbookRowsToList(genericListType, workbook, formatConverter);
+            AddWorkbookRowsToList(workbook);
         }
 
         public void DeserializeWithNullStrings(AsposeWorkbook workbook)
         {
-            var formatConverter = new FormatConverterWithNullStrings();
+            jsonConverter = new JsonConverterWithNullStrings();
             list.Clear();
-            AddWorkbookRowsToList(genericListType, workbook, formatConverter);
+            AddWorkbookRowsToList(workbook);
         }
 
-        private void AddWorkbookRowsToList(Type genericListType, AsposeWorkbook workbook, JsonConverter formatConverter)
+        private void AddWorkbookRowsToList(AsposeWorkbook workbook)
         {
-            using (DataTable dt = GetDataTable(genericListType, workbook))
+            using (DataTable dt = GetDataTable(workbook))
             {
                 for (int i = 0; i < dt.Rows.Count; i++)
                 {
-                    var obj = GetObjectFromDataTableRow(genericListType, dt, i, formatConverter);
+                    var obj = GetObjectFromDataTableRow(dt, i);
                     list.Add(obj);
                 }
             }
         }
 
-        private DataTable GetDataTable(Type genericListType, AsposeWorkbook workbook)
+        private DataTable GetDataTable(AsposeWorkbook workbook)
         {
             var sheet = workbook.Worksheets[worksheetName];
             int lastRow = sheet.Cells.Rows.Count;
@@ -58,7 +64,7 @@ namespace SpreadsheetSerializer.AsposeCells
             return sheet.Cells.ExportDataTable(0, 0, lastRow, columnCount, options);
         }
 
-        private static object GetObjectFromDataTableRow(Type genericListType, DataTable dt, int rowIndex, JsonConverter formatConverter)
+        private object GetObjectFromDataTableRow(DataTable dt, int rowIndex)
         {
             // adapted from https://stackoverflow.com/questions/43315700/json-net-how-to-serialize-just-one-row-from-a-datatable-object-without-it-being
             string json = new JObject(
@@ -66,7 +72,7 @@ namespace SpreadsheetSerializer.AsposeCells
                     .Select(c => new JProperty(c.ColumnName, JToken.FromObject(dt.Rows[rowIndex][c])))
             ).ToString(Formatting.Indented);
 
-            var obj = JsonConvert.DeserializeObject(json, genericListType, formatConverter);
+            var obj = JsonConvert.DeserializeObject(json, genericListType, jsonConverter);
             return obj;
         }
     }

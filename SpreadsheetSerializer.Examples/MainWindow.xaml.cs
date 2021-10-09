@@ -107,6 +107,8 @@ namespace SpreadsheetSerializer.Examples
 
             //// TODO: allow name attributes
             //// TODO: restore single sheet API
+            // TODO: allow a different JsonConveter for each sheet in a workbook
+            // TODO: test decimals and other types
             //var myWorkbookSerializer = new WorkbookSerializer<ExampleWorkbook>().WithWorkbookName("myNewWorkbookName4");
 
             //myWorkbookSerializer.Serialize(myWorkbookExample);
@@ -122,9 +124,9 @@ namespace SpreadsheetSerializer.Examples
             //    myUsers = (List<User>)worksheetDeserializer.DeserializeWithNullStrings(typeof(User), workbook);
             //}
 
-            var myWorkbookClass = new ExampleWorkbook();
+            //var myWorkbookClass = new ExampleWorkbook();
             var wbDeserializer = new WorkbookDeserializer<ExampleWorkbook>();
-            wbDeserializer.Deserialize(ref myWorkbookClass, "MyNewWorkbook.xlsx");
+            var myWorkbook = wbDeserializer.Deserialize("MyNewWorkbook.xlsx");
 
         }
 

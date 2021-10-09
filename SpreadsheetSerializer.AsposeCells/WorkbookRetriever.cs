@@ -12,10 +12,10 @@ namespace SpreadsheetSerializer.AsposeCells
             return workbook;
         }
 
-        public static AsposeWorkbook GetWorkbookFromStream(Stream stream, string workbookName)
+        public static AsposeWorkbook GetWorkbookFromStream(Stream stream)
         {
             var workbook = new AsposeWorkbook(stream);
-            workbook.WorkbookName = workbookName;
+            // workbook name is not needed for deserializing
             return workbook;
         }
 

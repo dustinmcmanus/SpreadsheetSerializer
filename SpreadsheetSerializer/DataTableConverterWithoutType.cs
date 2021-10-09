@@ -29,7 +29,6 @@ namespace SpreadsheetSerializer
                 dataTable.Columns.Add(prop.Name);
             }
 
-
             foreach (var record in records)
             {
                 for (int i = 0; i < propertiesList.Count; i++)
