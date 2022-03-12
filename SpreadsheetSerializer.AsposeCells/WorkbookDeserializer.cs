@@ -15,7 +15,7 @@ namespace SpreadsheetSerializer.AsposeCells
         {
         }
 
-        public WorkbookDeserializer<T> WithNullStringJsonConverter()
+        public WorkbookDeserializer<T> WithJsonConverterForNullStrings()
         {
             this.jsonConverter = new JsonConverterWithNullStrings();
             return this;

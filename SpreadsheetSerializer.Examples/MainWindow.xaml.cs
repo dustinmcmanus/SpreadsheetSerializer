@@ -1,5 +1,8 @@
-﻿using SpreadsheetSerializer.AsposeCells;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using SpreadsheetSerializer.AsposeCells;
 using System.Collections.Generic;
+using System.Text;
 using System.Windows;
 
 namespace SpreadsheetSerializer.Examples
@@ -105,8 +108,8 @@ namespace SpreadsheetSerializer.Examples
             //myWorkbookExample.Users = users;
             //myWorkbookExample.UserSettings = userSettings;
 
-            //// TODO: allow name attributes
-            //// TODO: restore single sheet API
+            // TODO: allow name attributes
+            // TODO: restore single sheet API
             // TODO: allow a different JsonConveter for each sheet in a workbook
             // TODO: test decimals and other types
             //var myWorkbookSerializer = new WorkbookSerializer<ExampleWorkbook>().WithWorkbookName("myNewWorkbookName4");
@@ -125,8 +128,46 @@ namespace SpreadsheetSerializer.Examples
             //}
 
             //var myWorkbookClass = new ExampleWorkbook();
+            //var wbDeserializer = new WorkbookDeserializer<ExampleWorkbook>().WithJsonConverter(new JsonConverterWithNullStrings());
             var wbDeserializer = new WorkbookDeserializer<ExampleWorkbook>();
             var myWorkbook = wbDeserializer.Deserialize("MyNewWorkbook.xlsx");
+
+            string json = JsonConvert.SerializeObject(myWorkbook);
+
+            var jobj = JObject.Parse(json);
+
+            foreach (var child in jobj)
+            {
+                var key = child.Key;
+                var value = child.Value;
+
+                if (value != null)
+                {
+                    //string fileText = value.ToString(Formatting.None);
+                    //string oneRowPerRecordFileText = fileText.Replace("}, ");
+
+                    var sb = new StringBuilder();
+                    sb.Append("[");
+
+                    foreach (var token in value)
+                    {
+                        string record = token.ToString(Formatting.None);
+                        sb.Append(record);
+
+                        if (!ReferenceEquals(token, value.Last))
+                        {
+                            sb.AppendLine(",");
+                        }
+                    }
+
+                    sb.Append("]");
+
+                    //foreach (var token in )                    //foreach (var token in )
+
+
+                    System.IO.File.WriteAllText(key + ".json", sb.ToString());
+                }
+            }
 
         }
 
