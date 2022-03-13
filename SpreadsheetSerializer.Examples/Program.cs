@@ -1,24 +1,12 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using SpreadsheetSerializer.AsposeCells;
+﻿using SpreadsheetSerializer.AsposeCells;
+using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Windows;
 
 namespace SpreadsheetSerializer.Examples
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    public partial class MainWindow : Window
+    class Program
     {
-        public MainWindow()
-        {
-            InitializeComponent();
-        }
-
-
-        public void Run()
+        static void Main(string[] args)
         {
             var users = new List<User>();
 
@@ -37,6 +25,7 @@ namespace SpreadsheetSerializer.Examples
 
             var userSettings = new List<UserSetting>();
 
+            //var userSetting1 = new UserSetting { Id = 1, UserId = 1, SettingName = "Theme", Value = "Dark" };
             var userSetting1 = new UserSetting();
             userSetting1.Id = 1;
             userSetting1.UserId = 1;
@@ -65,9 +54,12 @@ namespace SpreadsheetSerializer.Examples
 
 
 
+            //var workbook = new WorkbookSerializer().WithFilePath("MyWorkbook4");
+
+            //var sheet1 = new WorksheetSerializer<User>(users).WithWorksheetName("myUsers1");
 
 
-            //var workbook = new ExcelWorkbookSerializer().WithWorkbookName("MyWorkbook4");
+            //var workbook = new ExcelWorkbookSerializer().WithFilePath("MyWorkbook4");
 
             //var sheet1 = new ExcelWorksheetSerializer<User>(users).WithWorksheetName("myUsers1");
             ////sheet1.workbook = workbookCreator;
@@ -80,15 +72,16 @@ namespace SpreadsheetSerializer.Examples
             //workbook.Serialize();
 
 
+            //var sheet3 = new WorksheetSerializer();
+
+            //var wb3 = new WorkbookSerializer<List<User>>();
 
 
 
+            ////}
 
-
-
-            //}
-
-            //ISpreadsheetSerializer<User> spreadsheetCreator = new AsposeCells.ExcelWorksheetSerializer<User>().WithWorkbookName("MyWorkbook");
+            //ISpreadsheetSerializer<User> spreadsheetCreator = new AsposeCells.WorkbookSerializer<User>();
+            ////ISpreadsheetSerializer<User> spreadsheetCreator = new AsposeCells.ExcelWorksheetSerializer<User>().WithFilePath("MyWorkbook");
 
             //spreadsheetCreator.Serialize(users, "users");
 
@@ -104,15 +97,15 @@ namespace SpreadsheetSerializer.Examples
 
             ////////////////////////////////////////////////
 
-            //var myWorkbookExample = new ExampleWorkbook();
-            //myWorkbookExample.Users = users;
-            //myWorkbookExample.UserSettings = userSettings;
+            var myWorkbookExample = new ExampleWorkbook();
+            myWorkbookExample.Users = users;
+            myWorkbookExample.UserSettings = userSettings;
 
             // TODO: allow name attributes
             // TODO: restore single sheet API
             // TODO: allow a different JsonConveter for each sheet in a workbook
             // TODO: test decimals and other types
-            //var myWorkbookSerializer = new WorkbookSerializer<ExampleWorkbook>().WithWorkbookName("myNewWorkbookName4");
+            //var myWorkbookSerializer = new WorkbookSerializer<ExampleWorkbook>().WithFilePath("myNewWorkbookName4");
 
             //myWorkbookSerializer.Serialize(myWorkbookExample);
 
@@ -129,52 +122,14 @@ namespace SpreadsheetSerializer.Examples
 
             //var myWorkbookClass = new ExampleWorkbook();
             //var wbDeserializer = new WorkbookDeserializer<ExampleWorkbook>().WithJsonConverter(new JsonConverterWithNullStrings());
+
+
             var wbDeserializer = new WorkbookDeserializer<ExampleWorkbook>();
-            var myWorkbook = wbDeserializer.Deserialize("MyNewWorkbook.xlsx");
+            //var myWorkbookExample = wbDeserializer.Deserialize("MyNewWorkbook.xlsx");
 
-            string json = JsonConvert.SerializeObject(myWorkbook);
-
-            var jobj = JObject.Parse(json);
-
-            foreach (var child in jobj)
-            {
-                var key = child.Key;
-                var value = child.Value;
-
-                if (value != null)
-                {
-                    //string fileText = value.ToString(Formatting.None);
-                    //string oneRowPerRecordFileText = fileText.Replace("}, ");
-
-                    var sb = new StringBuilder();
-                    sb.Append("[");
-
-                    foreach (var token in value)
-                    {
-                        string record = token.ToString(Formatting.None);
-                        sb.Append(record);
-
-                        if (!ReferenceEquals(token, value.Last))
-                        {
-                            sb.AppendLine(",");
-                        }
-                    }
-
-                    sb.Append("]");
-
-                    //foreach (var token in )                    //foreach (var token in )
-
-
-                    System.IO.File.WriteAllText(key + ".json", sb.ToString());
-                }
-            }
-
-        }
-
-        private void button_Click(object sender, RoutedEventArgs e)
-        {
-            Run();
+            JsonDirectorySerializer.JsonDirectorySerializer.Serialize(users, "../../../../SpreadsheetSerializer.Tests.Unit/DataSource1");
+            //SpreadsheetSerializer.Examples.TextFileSerializer.SerializeToTextFiles(myWorkbookExample, "../../../../SpreadsheetSerializer.Tests.Unit/DataSource1");
+            Console.WriteLine("Hello World!");
         }
     }
-
 }

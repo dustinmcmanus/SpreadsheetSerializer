@@ -1,48 +1,22 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 
 namespace SpreadsheetSerializer.AsposeCells
 {
     public class WorkbookSerializer<T>
     {
         public string WorkbookName { get; set; } = "";
+        public string FilePath { get; set; } = "";
+
         private List<WorksheetSerializer> worksheetSerializers = new List<WorksheetSerializer>();
 
-        public WorkbookSerializer()
+        public void Serialize(T workbookClass, string filePath = @"")
         {
-        }
-
-        public WorkbookSerializer(string workbookName)
-        {
-            SetWorkbookName(workbookName);
-        }
-
-        public WorkbookSerializer<T> WithWorkbookName(string workbookName)
-        {
-            SetWorkbookName(workbookName);
-            return this;
-        }
-
-        private void SetWorkbookName(string workbookName)
-        {
-            string workbookNameWithoutExtension = workbookName;
-            if (workbookName.EndsWith(".xlsx"))
-            {
-                workbookNameWithoutExtension = Path.GetFileNameWithoutExtension(workbookName);
-            }
-
-            this.WorkbookName = workbookNameWithoutExtension;
-        }
-
-        public void Serialize(T workbookClass)
-        {
-            // TODO: handle saving to full file path
-            // Create excel workbook
-            SetWorkbookNameIfUnspecified();
-            //PopulateWorksheetSerializersFromWorkbookProperties(workbookClass);
+            SetWorkbookNameIfUnspecified(filePath);
+            // Populate WorksheetSerializers from Workbook properties on workbookClass
             worksheetSerializers = GetWorksheetSerializers(workbookClass);
+            // Create excel workbook
             WriteWorkbook();
             DisposeDataTables();
         }
@@ -71,9 +45,8 @@ namespace SpreadsheetSerializer.AsposeCells
 
         private void WriteWorkbook()
         {
-            // TODO: prevent instantiating AsposeWorkbook() directly without a name.
             // Force creation through WorkbookCreator and WorkbookRetriever factory methods
-            using (var workbook = WorkbookCreator.CreateWorkbookWithName(WorkbookName))
+            using (var workbook = WorkbookCreator.CreateWorkbookWithFilePath(FilePath))
             {
                 CreateSheets(workbook);
                 workbook.RemoveDefaultTab();
@@ -98,12 +71,13 @@ namespace SpreadsheetSerializer.AsposeCells
             }
         }
 
-        private void SetWorkbookNameIfUnspecified()
+        private void SetWorkbookNameIfUnspecified(string filePath)
         {
-            if (string.IsNullOrEmpty(WorkbookName))
+            if (string.IsNullOrEmpty(filePath))
             {
                 var workbookClassName = typeof(T).Name;
                 WorkbookName = workbookClassName;
+                FilePath = workbookClassName + ".xlsx";
             }
         }
     }

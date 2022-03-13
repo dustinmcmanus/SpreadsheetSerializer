@@ -5,9 +5,13 @@ VisualStudioVersion = 16.0.31605.320
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpreadsheetSerializer", "SpreadsheetSerializer\SpreadsheetSerializer.csproj", "{24AB1F48-77CC-4928-8C91-56225DB1A6BB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpreadsheetSerializer.Examples", "SpreadsheetSerializer.Examples\SpreadsheetSerializer.Examples.csproj", "{B11803DA-B4B6-4A57-92E9-A917C6918DE1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpreadsheetSerializer.AsposeCells", "SpreadsheetSerializer.AsposeCells\SpreadsheetSerializer.AsposeCells.csproj", "{A2F1E169-737C-49F2-AFC2-7957C1F5E0E3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpreadsheetSerializer.AsposeCells", "SpreadsheetSerializer.AsposeCells\SpreadsheetSerializer.AsposeCells.csproj", "{A2F1E169-737C-49F2-AFC2-7957C1F5E0E3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpreadsheetSerializer.Tests.Unit", "SpreadsheetSerializer.Tests.Unit\SpreadsheetSerializer.Tests.Unit.csproj", "{087965FC-0D72-4EAC-A665-BCBCE3EDDB0C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonDirectorySerializer", "JsonDirectorySerializer\JsonDirectorySerializer.csproj", "{46A843A9-88D4-4FB1-A1F1-9FAE4CAE6F79}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpreadsheetSerializer.Examples", "SpreadsheetSerializer.Examples\SpreadsheetSerializer.Examples.csproj", "{23563A3A-D3DA-4959-B1CD-9CF32839FF18}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,14 +23,22 @@ Global
 		{24AB1F48-77CC-4928-8C91-56225DB1A6BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{24AB1F48-77CC-4928-8C91-56225DB1A6BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{24AB1F48-77CC-4928-8C91-56225DB1A6BB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B11803DA-B4B6-4A57-92E9-A917C6918DE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B11803DA-B4B6-4A57-92E9-A917C6918DE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B11803DA-B4B6-4A57-92E9-A917C6918DE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B11803DA-B4B6-4A57-92E9-A917C6918DE1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A2F1E169-737C-49F2-AFC2-7957C1F5E0E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A2F1E169-737C-49F2-AFC2-7957C1F5E0E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A2F1E169-737C-49F2-AFC2-7957C1F5E0E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A2F1E169-737C-49F2-AFC2-7957C1F5E0E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{087965FC-0D72-4EAC-A665-BCBCE3EDDB0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{087965FC-0D72-4EAC-A665-BCBCE3EDDB0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{087965FC-0D72-4EAC-A665-BCBCE3EDDB0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{087965FC-0D72-4EAC-A665-BCBCE3EDDB0C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46A843A9-88D4-4FB1-A1F1-9FAE4CAE6F79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46A843A9-88D4-4FB1-A1F1-9FAE4CAE6F79}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46A843A9-88D4-4FB1-A1F1-9FAE4CAE6F79}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46A843A9-88D4-4FB1-A1F1-9FAE4CAE6F79}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23563A3A-D3DA-4959-B1CD-9CF32839FF18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23563A3A-D3DA-4959-B1CD-9CF32839FF18}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23563A3A-D3DA-4959-B1CD-9CF32839FF18}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23563A3A-D3DA-4959-B1CD-9CF32839FF18}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

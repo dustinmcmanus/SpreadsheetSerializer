@@ -2,9 +2,9 @@
 {
     public class WorkbookCreator
     {
-        public static AsposeWorkbook CreateWorkbookWithName(string workbookName)
+        public static AsposeWorkbook CreateWorkbookWithFilePath(string filePath)
         {
-            return new AsposeWorkbook().WithWorkbookName(workbookName);
+            return new AsposeWorkbook().WithFilePath(filePath);
         }
     }
 }

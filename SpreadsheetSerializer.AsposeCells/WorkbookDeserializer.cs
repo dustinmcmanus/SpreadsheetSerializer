@@ -22,9 +22,9 @@ namespace SpreadsheetSerializer.AsposeCells
         }
 
         // allow user to override with any custom NewtonSoft JsonConverter
-        public WorkbookDeserializer<T> WithJsonConverter(JsonConverter jsonConverter)
+        public WorkbookDeserializer<T> WithJsonConverter(JsonConverter converter)
         {
-            this.jsonConverter = jsonConverter;
+            this.jsonConverter = converter;
             return this;
         }
 

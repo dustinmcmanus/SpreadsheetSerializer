@@ -20,7 +20,7 @@ namespace SpreadsheetSerializer.AsposeCells
             this.worksheetName = worksheetName ?? throw new ArgumentNullException(nameof(worksheetName));
             this.list = list ?? throw new ArgumentNullException(nameof(list));
             this.genericListType = genericListType ?? throw new ArgumentNullException(nameof(genericListType));
-            jsonConverter = new DefaultJsonConverter();
+            jsonConverter = new JsonConverterDefault();
         }
 
         public void SetJsonConverter(JsonConverter jsonConverter)
@@ -70,7 +70,7 @@ namespace SpreadsheetSerializer.AsposeCells
             string json = new JObject(
                 dt.Columns.Cast<DataColumn>()
                     .Select(c => new JProperty(c.ColumnName, JToken.FromObject(dt.Rows[rowIndex][c])))
-            ).ToString(Formatting.Indented);
+            ).ToString(Formatting.None);
 
             var obj = JsonConvert.DeserializeObject(json, genericListType, jsonConverter);
             return obj;

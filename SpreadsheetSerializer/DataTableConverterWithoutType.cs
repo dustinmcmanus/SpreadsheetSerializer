@@ -10,7 +10,6 @@ namespace SpreadsheetSerializer
     {
         public DataTable CreateDataTableFor(IList records, Type typeOfObject)
         {
-            //var typeOfObject = typeof(T);
             var objectPropertiesUnordered = typeOfObject.GetProperties();
             var properties = from property in objectPropertiesUnordered
                              where Attribute.IsDefined(property, typeof(OrderAttribute))

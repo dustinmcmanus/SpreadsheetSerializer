@@ -5,7 +5,7 @@ namespace SpreadsheetSerializer
 {
 
     // from https://stackoverflow.com/questions/17199500/jsonconvert-string-to-integer-about-digit-grouping-symbol/17200536
-    public class DefaultJsonConverter : JsonConverter
+    public class JsonConverterDefault : JsonConverter
     {
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {

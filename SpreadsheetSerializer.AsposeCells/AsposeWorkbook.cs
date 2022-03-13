@@ -7,6 +7,7 @@ namespace SpreadsheetSerializer.AsposeCells
     public class AsposeWorkbook : Aspose.Cells.Workbook
     {
         public string WorkbookName { get; set; }
+        public string FilePath { get; set; }
 
         public AsposeWorkbook()
         {
@@ -32,9 +33,20 @@ namespace SpreadsheetSerializer.AsposeCells
         {
         }
 
-        public AsposeWorkbook WithWorkbookName(string workbookName)
+        public AsposeWorkbook WithFilePath(string filePath)
         {
-            WorkbookName = workbookName;
+            WorkbookName = Path.GetFileNameWithoutExtension(filePath);
+
+            // if the file name does not have an extension, then add a default one for Excel
+            if (!Path.HasExtension(filePath))
+            {
+                FilePath = filePath + ".xlsx";
+            }
+            else
+            {
+                FilePath = filePath;
+            }
+
             return this;
         }
 
@@ -49,7 +61,7 @@ namespace SpreadsheetSerializer.AsposeCells
 
         public void Delete()
         {
-            File.Delete(WorkbookName + ".xlsx");
+            File.Delete(FilePath);
         }
 
         public void RemoveDefaultTab()
@@ -60,7 +72,7 @@ namespace SpreadsheetSerializer.AsposeCells
 
         public void Save()
         {
-            Save(WorkbookName + ".xlsx");
+            Save(FilePath);
         }
     }
 }

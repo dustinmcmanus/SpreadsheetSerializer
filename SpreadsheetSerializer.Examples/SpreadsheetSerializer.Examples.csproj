@@ -1,12 +1,12 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0-windows</TargetFramework>
-    <UseWPF>true</UseWPF>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\JsonDirectorySerializer\JsonDirectorySerializer.csproj" />
     <ProjectReference Include="..\SpreadsheetSerializer.AsposeCells\SpreadsheetSerializer.AsposeCells.csproj" />
     <ProjectReference Include="..\SpreadsheetSerializer\SpreadsheetSerializer.csproj" />
   </ItemGroup>

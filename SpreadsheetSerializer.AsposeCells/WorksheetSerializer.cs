@@ -9,7 +9,6 @@ namespace SpreadsheetSerializer.AsposeCells
 
         public WorksheetSerializer(DataTable dataTable, string worksheetName)
         {
-            //this.workbook = workbook;
             this.dataTable = dataTable;
             this.WorksheetName = worksheetName;
         }
