@@ -60,6 +60,12 @@ namespace SpreadsheetSerializer.AsposeCells
 
         public T Deserialize(string workbookFilePath)
         {
+            // if the file name does not have an extension, then add a default one for Excel
+            if (!Path.HasExtension(workbookFilePath))
+            {
+                workbookFilePath += ".xlsx";
+            }
+
             T workbookClass = (T)Activator.CreateInstance(typeof(T));
             worksheetDeserializers = GetWorksheetDeserializers(workbookClass);
             DeserializeWorkboookFromFilePath(workbookFilePath);

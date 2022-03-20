@@ -72,6 +72,12 @@ namespace SpreadsheetSerializer.AsposeCells
 
         public void Save()
         {
+            string directoryPath = Path.GetDirectoryName(FilePath);
+            if (!string.IsNullOrEmpty(directoryPath) && !Directory.Exists(directoryPath))
+            {
+                Directory.CreateDirectory(directoryPath);
+            }
+
             Save(FilePath);
         }
     }

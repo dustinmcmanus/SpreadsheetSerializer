@@ -8,43 +8,55 @@ namespace JsonDirectorySerializer
 {
     public static class JsonFileFromListSerializer<T>
     {
-        public static void Serialize(IList<T> list, string filePath = @"")
+        public static void Serialize(IEnumerable<T> list, string filePath = "")
         {
-            string className = typeof(T).Name;
-            string jsonFilePath = filePath;
-
-            if (string.IsNullOrEmpty(jsonFilePath))
+            var items = list.ToList();
+            string path = filePath;
+            string fileName = Path.GetFileNameWithoutExtension(filePath);
+            if (string.IsNullOrEmpty(fileName))
             {
-                jsonFilePath = Path.Combine(filePath, className);
+                fileName = typeof(T).Name;
+                path = Path.Combine(path, fileName);
             }
 
-            if (!Path.HasExtension(jsonFilePath))
+            // if the file name does not have an extension, then add a default one for Excel
+            if (!Path.HasExtension(path))
             {
-                jsonFilePath += ".json";
+                path += ".json";
             }
 
-            T lastItem = list.Last();
 
             var sb = new StringBuilder();
             sb.Append("[");
 
-            foreach (var item in list)
+            if (items.Any())
             {
-                if (item != null)
+                T lastItem = items.Last();
+                foreach (var item in items)
                 {
-                    string record = JsonConvert.SerializeObject(item, Formatting.None);
-                    sb.Append(record);
-
-                    if (!ReferenceEquals(item, lastItem))
+                    if (item != null)
                     {
-                        sb.AppendLine(",");
-                    }
+                        string record = JsonConvert.SerializeObject(item, Formatting.None);
+                        sb.Append(record);
 
+                        if (!ReferenceEquals(item, lastItem))
+                        {
+                            sb.AppendLine(",");
+                        }
+
+                    }
                 }
             }
+
             sb.Append("]");
 
-            System.IO.File.WriteAllText(jsonFilePath, sb.ToString());
+            string directoryPath = Path.GetDirectoryName(path);
+            if (!string.IsNullOrEmpty(directoryPath) && !Directory.Exists(directoryPath))
+            {
+                Directory.CreateDirectory(directoryPath);
+            }
+
+            System.IO.File.WriteAllText(path, sb.ToString());
         }
     }
 }

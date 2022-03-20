@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 
 namespace SpreadsheetSerializer.AsposeCells
 {
@@ -11,9 +12,10 @@ namespace SpreadsheetSerializer.AsposeCells
 
         private List<WorksheetSerializer> worksheetSerializers = new List<WorksheetSerializer>();
 
-        public void Serialize(T workbookClass, string filePath = @"")
+        public void Serialize(T workbookClass, string filePath = "")
         {
-            SetWorkbookNameIfUnspecified(filePath);
+            SetFileProperties(filePath);
+
             // Populate WorksheetSerializers from Workbook properties on workbookClass
             worksheetSerializers = GetWorksheetSerializers(workbookClass);
             // Create excel workbook
@@ -71,13 +73,20 @@ namespace SpreadsheetSerializer.AsposeCells
             }
         }
 
-        private void SetWorkbookNameIfUnspecified(string filePath)
+        private void SetFileProperties(string filePath)
         {
-            if (string.IsNullOrEmpty(filePath))
+            FilePath = filePath;
+            WorkbookName = Path.GetFileNameWithoutExtension(filePath);
+            if (string.IsNullOrEmpty(WorkbookName))
             {
-                var workbookClassName = typeof(T).Name;
-                WorkbookName = workbookClassName;
-                FilePath = workbookClassName + ".xlsx";
+                WorkbookName = typeof(T).Name;
+                FilePath = Path.Combine(FilePath, WorkbookName);
+            }
+
+            // if the file name does not have an extension, then add a default one for Excel
+            if (!Path.HasExtension(FilePath))
+            {
+                FilePath += ".xlsx";
             }
         }
     }

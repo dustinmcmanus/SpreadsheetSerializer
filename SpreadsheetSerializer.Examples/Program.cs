@@ -85,13 +85,30 @@ namespace SpreadsheetSerializer.Examples
 
             //spreadsheetCreator.Serialize(users, "users");
 
+            // TODO: make namespace
 
 
+            // use cases
+            // from JSON files to class with List properties
+            // from JSON file to list of class
 
+            // From Excel Workbook with multiple tabs to Class with properties having Lists
+            // from Excel Workbook with one tab to List<class>
 
+            // from class with list of properties to JSON files
+            // from List<class> to json file
 
+            // from class with list of properties to Excel workbook with multiple tabs for each property
+            // from List<class> to Excel workbook with workbook and tab named after class
 
+            // indirect:
+            // from JSON file to Excel
+            // from JSON files to Excel
+            // from Excel to JSON files
+            // from Excel to Json File
 
+            // from
+            // to
 
 
 

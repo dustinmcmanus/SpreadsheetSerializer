@@ -7,7 +7,7 @@ namespace JsonDirectorySerializer
 {
     public static class JsonDirectorySerializer
     {
-        public static void Serialize(object classInstanceToSerialize, string directoryPath = @"")
+        public static void Serialize(object classInstanceToSerialize, string directoryPath = "")
         {
             string className = classInstanceToSerialize.GetType().Name;
             string newDirectoryPath = Path.Combine(directoryPath, className);
