@@ -7,11 +7,18 @@ namespace SpreadsheetSerializer.AsposeCells
 {
     public class WorkbookSerializer<T>
     {
-        public string WorkbookName { get; set; } = "";
-        public string FilePath { get; set; } = "";
+        private string WorkbookName { get; set; } = "";
+        private string FilePath { get; set; } = "";
 
         private List<WorksheetSerializer> worksheetSerializers = new List<WorksheetSerializer>();
 
+        /// <summary>
+        /// Writes out workbookClass object to an Excel Workbook file with a separate Worksheet for each List property having an Order attribute.
+        /// Only properties that are Lists should be serialized.
+        /// Defaults to current working directory and [nameof(T)].xlsx
+        /// </summary>
+        /// <param name="workbookClass"></param>
+        /// <param name="filePath"></param>
         public void Serialize(T workbookClass, string filePath = "")
         {
             SetFileProperties(filePath);

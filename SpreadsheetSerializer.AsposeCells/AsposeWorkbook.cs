@@ -4,7 +4,7 @@ using System.IO;
 
 namespace SpreadsheetSerializer.AsposeCells
 {
-    public class AsposeWorkbook : Aspose.Cells.Workbook
+    internal class AsposeWorkbook : Aspose.Cells.Workbook
     {
         public string WorkbookName { get; set; }
         public string FilePath { get; set; }

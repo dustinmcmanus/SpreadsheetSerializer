@@ -1,6 +1,4 @@
-﻿using SpreadsheetSerializer.AsposeCells;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace SpreadsheetSerializer.Examples
 {
@@ -25,7 +23,6 @@ namespace SpreadsheetSerializer.Examples
 
             var userSettings = new List<UserSetting>();
 
-            //var userSetting1 = new UserSetting { Id = 1, UserId = 1, SettingName = "Theme", Value = "Dark" };
             var userSetting1 = new UserSetting();
             userSetting1.Id = 1;
             userSetting1.UserId = 1;
@@ -49,45 +46,6 @@ namespace SpreadsheetSerializer.Examples
 
             SpreadsheetSerializer.AsposeCells.License.SetLicense("Aspose.Total.lic");
 
-            //using (var workbookCreator = new WorkbookCreator("MyWorkbook3"))
-            //{
-
-
-
-            //var workbook = new WorkbookSerializer().WithFilePath("MyWorkbook4");
-
-            //var sheet1 = new WorksheetSerializer<User>(users).WithWorksheetName("myUsers1");
-
-
-            //var workbook = new ExcelWorkbookSerializer().WithFilePath("MyWorkbook4");
-
-            //var sheet1 = new ExcelWorksheetSerializer<User>(users).WithWorksheetName("myUsers1");
-            ////sheet1.workbook = workbookCreator;
-
-            //var sheet2 = new ExcelWorksheetSerializer<UserSetting>(userSettings).WithWorksheetName("myUsersSettings2");
-            ////sheet2.workbook = workbookCreator;
-
-            //workbook.WorkSheetSerializers.Add(sheet1); // WithTabName?
-            //workbook.WorkSheetSerializers.Add(sheet2); // WithTabName?
-            //workbook.Serialize();
-
-
-            //var sheet3 = new WorksheetSerializer();
-
-            //var wb3 = new WorkbookSerializer<List<User>>();
-
-
-
-            ////}
-
-            //ISpreadsheetSerializer<User> spreadsheetCreator = new AsposeCells.WorkbookSerializer<User>();
-            ////ISpreadsheetSerializer<User> spreadsheetCreator = new AsposeCells.ExcelWorksheetSerializer<User>().WithFilePath("MyWorkbook");
-
-            //spreadsheetCreator.Serialize(users, "users");
-
-            // TODO: make namespace
-
-
             // use cases
             // from JSON files to class with List properties
             // from JSON file to list of class
@@ -107,11 +65,6 @@ namespace SpreadsheetSerializer.Examples
             // from Excel to JSON files
             // from Excel to Json File
 
-            // from
-            // to
-
-
-
             ////////////////////////////////////////////////
 
             var myWorkbookExample = new ExampleWorkbook();
@@ -119,34 +72,10 @@ namespace SpreadsheetSerializer.Examples
             myWorkbookExample.UserSettings = userSettings;
 
             // TODO: allow name attributes
-            // TODO: restore single sheet API
             // TODO: allow a different JsonConveter for each sheet in a workbook
             // TODO: test decimals and other types
-            //var myWorkbookSerializer = new WorkbookSerializer<ExampleWorkbook>().WithFilePath("myNewWorkbookName4");
 
-            //myWorkbookSerializer.Serialize(myWorkbookExample);
-
-
-            //List<User> myUsers;
-            //var worksheetDeserializer = new WorksheetDeserializer("Users");
-
-
-            //// new Aspose.Cells.Workbook(stream)
-            //using (var workbook = WorkbookRetriever.GetWorkbookFromFilePath("myNewWorkbookName4.xlsx"))
-            //{
-            //    myUsers = (List<User>)worksheetDeserializer.DeserializeWithNullStrings(typeof(User), workbook);
-            //}
-
-            //var myWorkbookClass = new ExampleWorkbook();
-            //var wbDeserializer = new WorkbookDeserializer<ExampleWorkbook>().WithJsonConverter(new JsonConverterWithNullStrings());
-
-
-            var wbDeserializer = new WorkbookDeserializer<ExampleWorkbook>();
-            //var myWorkbookExample = wbDeserializer.Deserialize("MyNewWorkbook.xlsx");
-
-            JsonDirectorySerializer.JsonDirectorySerializer.Serialize(users, "../../../../SpreadsheetSerializer.Tests.Unit/DataSource1");
-            //SpreadsheetSerializer.Examples.TextFileSerializer.SerializeToTextFiles(myWorkbookExample, "../../../../SpreadsheetSerializer.Tests.Unit/DataSource1");
-            Console.WriteLine("Hello World!");
+            // See SpreadsheetSerializer.Tests.Unit project for examples and instructions, especially SerializerTestsDataSource1.cs
         }
     }
 }

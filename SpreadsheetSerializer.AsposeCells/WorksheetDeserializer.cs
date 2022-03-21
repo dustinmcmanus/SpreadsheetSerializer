@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace SpreadsheetSerializer.AsposeCells
 {
-    public class WorksheetDeserializer
+    internal class WorksheetDeserializer
     {
         private readonly string worksheetName;
         private readonly Type genericListType;

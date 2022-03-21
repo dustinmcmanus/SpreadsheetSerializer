@@ -2,11 +2,11 @@
 
 namespace JsonDirectorySerializer
 {
-    public static class JsonDirectoryToClassDeserializer<T>
+    public class JsonDirectoryToClassDeserializer<T>
     {
-        public static T Deserialize(string jsonDirectoryPath)
+        public T Deserialize(string jsonDirectoryPath)
         {
-            return JsonConvert.DeserializeObject<T>(JsonDirectoryToStringDeserializer.Deserialize(jsonDirectoryPath));
+            return JsonConvert.DeserializeObject<T>(new JsonDirectoryToStringDeserializer().Deserialize(jsonDirectoryPath));
         }
     }
 }

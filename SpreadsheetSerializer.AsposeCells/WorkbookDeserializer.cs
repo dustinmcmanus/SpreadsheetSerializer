@@ -28,6 +28,44 @@ namespace SpreadsheetSerializer.AsposeCells
             return this;
         }
 
+        public T Deserialize(string workbookFilePath)
+        {
+            string path = workbookFilePath;
+            string fileName = Path.GetFileName(workbookFilePath);
+            if (string.IsNullOrEmpty(fileName))
+            {
+                string directory = Path.GetDirectoryName(path);
+                string fileNameWithoutExtension = typeof(T).Name;
+                if (!string.IsNullOrEmpty(directory))
+                {
+                    path = Path.Combine(directory, fileNameWithoutExtension);
+                }
+                else
+                {
+                    path = fileNameWithoutExtension;
+                }
+            }
+
+            // if the file name does not have an extension, then add a default one for Excel
+            if (!Path.HasExtension(path))
+            {
+                path += ".xlsx";
+            }
+
+            T workbookClass = (T)Activator.CreateInstance(typeof(T));
+            worksheetDeserializers = GetWorksheetDeserializers(workbookClass);
+            DeserializeWorkboookFromFilePath(path);
+            return workbookClass;
+        }
+
+        public T Deserialize(Stream asposeWorkbookStream)
+        {
+            T workbookClass = (T)Activator.CreateInstance(typeof(T));
+            worksheetDeserializers = GetWorksheetDeserializers(workbookClass);
+            DeserializeWorkboookFromStream(asposeWorkbookStream);
+            return workbookClass;
+        }
+
         private List<WorksheetDeserializer> GetWorksheetDeserializers(T workbookClass)
         {
             List<WorksheetDeserializer> deserializers = new List<WorksheetDeserializer>();
@@ -56,28 +94,6 @@ namespace SpreadsheetSerializer.AsposeCells
             }
 
             return deserializers;
-        }
-
-        public T Deserialize(string workbookFilePath)
-        {
-            // if the file name does not have an extension, then add a default one for Excel
-            if (!Path.HasExtension(workbookFilePath))
-            {
-                workbookFilePath += ".xlsx";
-            }
-
-            T workbookClass = (T)Activator.CreateInstance(typeof(T));
-            worksheetDeserializers = GetWorksheetDeserializers(workbookClass);
-            DeserializeWorkboookFromFilePath(workbookFilePath);
-            return workbookClass;
-        }
-
-        public T Deserialize(Stream workbookStream)
-        {
-            T workbookClass = (T)Activator.CreateInstance(typeof(T));
-            worksheetDeserializers = GetWorksheetDeserializers(workbookClass);
-            DeserializeWorkboookFromStream(workbookStream);
-            return workbookClass;
         }
 
         private void DeserializeWorkboookFromFilePath(string workbookFilePath)

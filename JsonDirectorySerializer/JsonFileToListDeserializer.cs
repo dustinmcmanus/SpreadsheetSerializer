@@ -4,9 +4,9 @@ using System.IO;
 
 namespace JsonDirectorySerializer
 {
-    public static class JsonFileToListDeserializer<T>
+    public class JsonFileToListDeserializer<T>
     {
-        public static List<T> Deserialize(string jsonFilePath = "")
+        public List<T> Deserialize(string jsonFilePath = "")
         {
             string path = jsonFilePath;
             string fileName = Path.GetFileNameWithoutExtension(jsonFilePath);

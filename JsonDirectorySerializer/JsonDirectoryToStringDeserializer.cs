@@ -3,9 +3,9 @@ using System.IO;
 
 namespace JsonDirectorySerializer
 {
-    public static class JsonDirectoryToStringDeserializer
+    public class JsonDirectoryToStringDeserializer
     {
-        public static string Deserialize(string jsonDirectoryPath)
+        public string Deserialize(string jsonDirectoryPath)
         {
             string[] fileNames = Directory.GetFiles(jsonDirectoryPath);
             JObject jObject = new JObject();

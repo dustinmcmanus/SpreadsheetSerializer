@@ -6,9 +6,9 @@ using System.Text;
 
 namespace JsonDirectorySerializer
 {
-    public static class JsonFileFromListSerializer<T>
+    public class JsonFileFromListSerializer<T>
     {
-        public static void Serialize(IEnumerable<T> list, string filePath = "")
+        public void Serialize(IEnumerable<T> list, string filePath = "")
         {
             var items = list.ToList();
             string path = filePath;

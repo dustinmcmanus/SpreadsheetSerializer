@@ -2,8 +2,12 @@
 
 namespace SpreadsheetSerializer.AsposeCells
 {
-    public class WorkbookRetriever
+    internal class WorkbookRetriever
     {
+        protected WorkbookRetriever()
+        {
+        }
+
         public static AsposeWorkbook GetWorkbookFromFilePath(string filePath)
         {
             string workbookName = Path.GetFileNameWithoutExtension(filePath);

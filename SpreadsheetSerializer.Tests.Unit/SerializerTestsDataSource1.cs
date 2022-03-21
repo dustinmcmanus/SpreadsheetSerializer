@@ -7,13 +7,12 @@ using System.IO;
 
 namespace SpreadsheetSerializer.Tests.Unit
 {
-    public class SerializerTests
+    public class SerializerTestsDataSource1
     {
         // JsonFileFromListSerializer requires the \ on the end of the directory path or it will create a file named DataSource1.json
         // none of the other tools require the \ at the end
         private const string DirectoryPath = @"..\..\..\DataSource1\";
         private ExampleWorkbook workbook;
-        private readonly SingleJsonFileListTests singleJsonFileListTests = new SingleJsonFileListTests();
 
         /// <summary>
         /// Setup tests by setting the Aspose license and reading the DataSource1 JSON directory into the workbook object.
@@ -30,15 +29,15 @@ namespace SpreadsheetSerializer.Tests.Unit
             // Excel Editing:
             //var wbDeserializer = new WorkbookDeserializer<ExampleWorkbook>();
             //var workbookExample = wbDeserializer.Deserialize(Path.Combine(DirectoryPath, nameof(ExampleWorkbook)));
-            //JsonDirectorySerializer.JsonDirectorySerializer.Serialize(workbookExample, DirectoryPath);
+            //new JsonDirectoryFromClassSerializer().Serialize(workbookExample, DirectoryPath);
 
 
             // Method 1: Json directory to class object instance
             string dataSource1ClassPath = Path.Combine(DirectoryPath, nameof(ExampleWorkbook));
-            workbook = JsonDirectoryToClassDeserializer<ExampleWorkbook>.Deserialize(dataSource1ClassPath);
+            workbook = new JsonDirectoryToClassDeserializer<ExampleWorkbook>().Deserialize(dataSource1ClassPath);
 
             // Method 2: Json directory to json string
-            //string json = JsonDirectoryToStringDeserializer.Deserialize(dataSource1ClassPath);
+            //string json = new JsonDirectoryToStringDeserializer().Deserialize(dataSource1ClassPath);
             //workbook = JsonConvert.DeserializeObject<ExampleWorkbook>(json);
         }
 
@@ -52,7 +51,7 @@ namespace SpreadsheetSerializer.Tests.Unit
         public void CreateExcelWorkbook()
         {
             //string dataSource1ClassPath = Path.Combine(DirectoryPath, nameof(ExampleWorkbook));
-            //var workbookExample = JsonDirectoryToClassDeserializer<ExampleWorkbook>.Deserialize(dataSource1ClassPath);
+            //var workbookExample = new JsonDirectoryToClassDeserializer<ExampleWorkbook>().Deserialize(dataSource1ClassPath);
 
             //var myWorkbookSerializer = new WorkbookSerializer<ExampleWorkbook>();
             //myWorkbookSerializer.Serialize(workbookExample, dataSource1ClassPath);
@@ -69,7 +68,7 @@ namespace SpreadsheetSerializer.Tests.Unit
         {
             //var wbDeserializer = new WorkbookDeserializer<ExampleWorkbook>();
             //var workbookExample = wbDeserializer.Deserialize(Path.Combine(DirectoryPath, nameof(ExampleWorkbook)));
-            //JsonDirectorySerializer.JsonDirectorySerializer.Serialize(workbookExample, DirectoryPath);
+            //new JsonDirectoryFromClassSerializer().Serialize(workbookExample, DirectoryPath);
         }
 
         /// <summary>

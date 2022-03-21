@@ -1,4 +1,5 @@
 using FluentAssertions;
+using JsonDirectorySerializer;
 using NUnit.Framework;
 using SpreadsheetSerializer.Examples;
 using System.Collections.Generic;
@@ -6,7 +7,7 @@ using System.IO;
 
 namespace SpreadsheetSerializer.Tests.Unit
 {
-    public class SingleJsonFileListTests
+    public class JsonFileListTestsDataSourceSingleFile
     {
         private const string DirectoryPath = @"..\..\..\DataSourceSingleFile\";
 
@@ -33,7 +34,7 @@ namespace SpreadsheetSerializer.Tests.Unit
         {
             var users = GetUsers();
 
-            JsonDirectorySerializer.JsonFileFromListSerializer<User>.Serialize(users, DirectoryPath);
+            new JsonFileFromListSerializer<User>().Serialize(users, DirectoryPath);
         }
 
         [Test]
@@ -41,8 +42,8 @@ namespace SpreadsheetSerializer.Tests.Unit
         {
             var users = GetUsers();
 
-            JsonDirectorySerializer.JsonFileFromListSerializer<User>.Serialize(users, DirectoryPath);
-            List<User> users2 = JsonDirectorySerializer.JsonFileToListDeserializer<User>.Deserialize(DirectoryPath);
+            new JsonFileFromListSerializer<User>().Serialize(users, DirectoryPath);
+            List<User> users2 = new JsonFileToListDeserializer<User>().Deserialize(DirectoryPath);
 
             users.Should().BeEquivalentTo(users2);
         }
@@ -55,8 +56,8 @@ namespace SpreadsheetSerializer.Tests.Unit
         {
             // ReSharper disable once CollectionNeverUpdated.Local
             var users = new List<User>();
-            JsonDirectorySerializer.JsonFileFromListSerializer<User>.Serialize(users);
-            List<User> users2 = JsonDirectorySerializer.JsonFileToListDeserializer<User>.Deserialize();
+            new JsonFileFromListSerializer<User>().Serialize(users);
+            List<User> users2 = new JsonFileToListDeserializer<User>().Deserialize();
             users.Should().BeEquivalentTo(users2);
         }
 
@@ -70,8 +71,8 @@ namespace SpreadsheetSerializer.Tests.Unit
             // ReSharper disable once CollectionNeverUpdated.Local
             var users = new List<User>();
             string path = Path.Combine(DirectoryPath, "Empty.json");
-            JsonDirectorySerializer.JsonFileFromListSerializer<User>.Serialize(users, path);
-            List<User> users2 = JsonDirectorySerializer.JsonFileToListDeserializer<User>.Deserialize(path);
+            new JsonFileFromListSerializer<User>().Serialize(users, path);
+            List<User> users2 = new JsonFileToListDeserializer<User>().Deserialize(path);
             users.Should().BeEquivalentTo(users2);
         }
 
@@ -84,8 +85,8 @@ namespace SpreadsheetSerializer.Tests.Unit
             // ReSharper disable once CollectionNeverUpdated.Local
             var users = new List<User>();
             string path = "Empty2.json";
-            JsonDirectorySerializer.JsonFileFromListSerializer<User>.Serialize(users, path);
-            List<User> users2 = JsonDirectorySerializer.JsonFileToListDeserializer<User>.Deserialize(path);
+            new JsonFileFromListSerializer<User>().Serialize(users, path);
+            List<User> users2 = new JsonFileToListDeserializer<User>().Deserialize(path);
             users.Should().BeEquivalentTo(users2);
         }
     }

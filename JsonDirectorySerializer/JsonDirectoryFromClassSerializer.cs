@@ -5,9 +5,9 @@ using System.Text;
 
 namespace JsonDirectorySerializer
 {
-    public static class JsonDirectorySerializer
+    public class JsonDirectoryFromClassSerializer
     {
-        public static void Serialize(object classInstanceToSerialize, string directoryPath = "")
+        public void Serialize(object classInstanceToSerialize, string directoryPath = "")
         {
             string className = classInstanceToSerialize.GetType().Name;
             string newDirectoryPath = Path.Combine(directoryPath, className);
@@ -17,7 +17,7 @@ namespace JsonDirectorySerializer
             Serialize(json, newDirectoryPath);
         }
 
-        private static void Serialize(string json, string directoryPath)
+        private void Serialize(string json, string directoryPath)
         {
             var jObject = JObject.Parse(json);
 

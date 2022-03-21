@@ -1,7 +1,11 @@
 ﻿namespace SpreadsheetSerializer.AsposeCells
 {
-    public class WorkbookCreator
+    internal class WorkbookCreator
     {
+        protected WorkbookCreator()
+        {
+        }
+
         public static AsposeWorkbook CreateWorkbookWithFilePath(string filePath)
         {
             return new AsposeWorkbook().WithFilePath(filePath);

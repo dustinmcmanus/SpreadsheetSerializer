@@ -2,9 +2,9 @@
 
 namespace SpreadsheetSerializer.AsposeCells
 {
-    public class WorksheetSerializer
+    internal class WorksheetSerializer
     {
-        public string WorksheetName { get; set; }
+        private string WorksheetName { get; set; }
         private readonly DataTable dataTable;
 
         public WorksheetSerializer(DataTable dataTable, string worksheetName)
