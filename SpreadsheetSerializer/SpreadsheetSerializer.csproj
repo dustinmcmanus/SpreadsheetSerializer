@@ -2,6 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Version>0.1.0</Version>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Copyright>Copyright 2022 Dustin McManus</Copyright>
+    <PackageProjectUrl>https://github.com/dustinmcmanus/SpreadsheetSerializer</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/dustinmcmanus/SpreadsheetSerializer</RepositoryUrl>
+    <RepositoryType>GitHub</RepositoryType>
   </PropertyGroup>
 
   <ItemGroup>

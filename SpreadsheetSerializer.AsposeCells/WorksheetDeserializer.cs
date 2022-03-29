@@ -13,30 +13,28 @@ namespace SpreadsheetSerializer.AsposeCells
         private readonly string worksheetName;
         private readonly Type genericListType;
         private readonly IList list;
-        private JsonConverter jsonConverter;
+
+        private JsonSerializerSettings serializerSettings = new JsonSerializerSettings()
+        {
+            Converters = { new JsonConverterDefault() }
+        };
+
+        public WorksheetDeserializer WithJsonSerializerSettings(JsonSerializerSettings settings)
+        {
+            this.serializerSettings = settings;
+            return this;
+        }
+
 
         public WorksheetDeserializer(string worksheetName, IList list, Type genericListType)
         {
             this.worksheetName = worksheetName ?? throw new ArgumentNullException(nameof(worksheetName));
             this.list = list ?? throw new ArgumentNullException(nameof(list));
             this.genericListType = genericListType ?? throw new ArgumentNullException(nameof(genericListType));
-            jsonConverter = new JsonConverterDefault();
-        }
-
-        public void SetJsonConverter(JsonConverter jsonConverter)
-        {
-            this.jsonConverter = jsonConverter;
         }
 
         public void Deserialize(AsposeWorkbook workbook)
         {
-            list.Clear();
-            AddWorkbookRowsToList(workbook);
-        }
-
-        public void DeserializeWithNullStrings(AsposeWorkbook workbook)
-        {
-            jsonConverter = new JsonConverterWithNullStrings();
             list.Clear();
             AddWorkbookRowsToList(workbook);
         }
@@ -72,7 +70,7 @@ namespace SpreadsheetSerializer.AsposeCells
                     .Select(c => new JProperty(c.ColumnName, JToken.FromObject(dt.Rows[rowIndex][c])))
             ).ToString(Formatting.None);
 
-            var obj = JsonConvert.DeserializeObject(json, genericListType, jsonConverter);
+            var obj = JsonConvert.DeserializeObject(json, genericListType, serializerSettings);
             return obj;
         }
     }

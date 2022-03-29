@@ -1,10 +1,19 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.IO;
 
 namespace JsonDirectorySerializer
 {
     public class JsonDirectoryToStringDeserializer
     {
+        private JsonSerializerSettings serializerSettings = new JsonSerializerSettings();
+
+        public JsonDirectoryToStringDeserializer WithJsonSerializerSettings(JsonSerializerSettings settings)
+        {
+            this.serializerSettings = settings;
+            return this;
+        }
+
         public string Deserialize(string jsonDirectoryPath)
         {
             string[] fileNames = Directory.GetFiles(jsonDirectoryPath);
@@ -18,7 +27,7 @@ namespace JsonDirectorySerializer
                 jObject[keyName] = records;
             }
 
-            var json = jObject.ToString();
+            var json = JsonConvert.SerializeObject(jObject, serializerSettings);
             return json;
         }
     }

@@ -8,24 +8,18 @@ namespace SpreadsheetSerializer.AsposeCells
     public class WorkbookDeserializerSingleSheet<T>
     {
         private WorksheetDeserializer worksheetDeserializer;
-        private JsonConverter jsonConverter;
+        private JsonSerializerSettings serializerSettings = new JsonSerializerSettings();
+
+        public WorkbookDeserializerSingleSheet<T> WithJsonSerializerSettings(JsonSerializerSettings settings)
+        {
+            this.serializerSettings = settings;
+            return this;
+        }
 
         public WorkbookDeserializerSingleSheet()
         {
         }
 
-        public WorkbookDeserializerSingleSheet<T> WithJsonConverterForNullStrings()
-        {
-            this.jsonConverter = new JsonConverterWithNullStrings();
-            return this;
-        }
-
-        // allow user to override with any custom NewtonSoft JsonConverter
-        public WorkbookDeserializerSingleSheet<T> WithJsonConverter(JsonConverter converter)
-        {
-            this.jsonConverter = converter;
-            return this;
-        }
 
         public List<T> Deserialize(string workbookFilePath = "", string worksheetName = "")
         {
@@ -67,12 +61,7 @@ namespace SpreadsheetSerializer.AsposeCells
         {
             Type genericListType = typeof(T);
 
-            var worksheetCreator = new WorksheetDeserializer(worksheetName, list, genericListType);
-
-            if (jsonConverter != null)
-            {
-                worksheetCreator.SetJsonConverter(jsonConverter);
-            }
+            var worksheetCreator = new WorksheetDeserializer(worksheetName, list, genericListType).WithJsonSerializerSettings(serializerSettings);
 
             return worksheetCreator;
         }

@@ -8,6 +8,14 @@ namespace JsonDirectorySerializer
 {
     public class JsonFileFromListSerializer<T>
     {
+        private JsonSerializerSettings serializerSettings = new JsonSerializerSettings();
+
+        public JsonFileFromListSerializer<T> WithJsonSerializerSettings(JsonSerializerSettings settings)
+        {
+            this.serializerSettings = settings;
+            return this;
+        }
+
         public void Serialize(IEnumerable<T> list, string filePath = "")
         {
             var items = list.ToList();
@@ -36,7 +44,7 @@ namespace JsonDirectorySerializer
                 {
                     if (item != null)
                     {
-                        string record = JsonConvert.SerializeObject(item, Formatting.None);
+                        string record = JsonConvert.SerializeObject(item, Formatting.None, serializerSettings);
                         sb.Append(record);
 
                         if (!ReferenceEquals(item, lastItem))

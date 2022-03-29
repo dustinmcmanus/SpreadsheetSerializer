@@ -6,6 +6,14 @@ namespace JsonDirectorySerializer
 {
     public class JsonFileToListDeserializer<T>
     {
+        private JsonSerializerSettings serializerSettings = new JsonSerializerSettings();
+
+        public JsonFileToListDeserializer<T> WithJsonSerializerSettings(JsonSerializerSettings settings)
+        {
+            this.serializerSettings = settings;
+            return this;
+        }
+
         public List<T> Deserialize(string jsonFilePath = "")
         {
             string path = jsonFilePath;
@@ -23,7 +31,7 @@ namespace JsonDirectorySerializer
             }
 
             string json = File.ReadAllText(path);
-            return JsonConvert.DeserializeObject<List<T>>(json);
+            return JsonConvert.DeserializeObject<List<T>>(json, serializerSettings);
         }
     }
 }

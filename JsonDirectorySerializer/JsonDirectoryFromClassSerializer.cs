@@ -7,12 +7,20 @@ namespace JsonDirectorySerializer
 {
     public class JsonDirectoryFromClassSerializer
     {
+        private JsonSerializerSettings serializerSettings = new JsonSerializerSettings();
+
+        public JsonDirectoryFromClassSerializer WithJsonSerializerSettings(JsonSerializerSettings settings)
+        {
+            this.serializerSettings = settings;
+            return this;
+        }
+
         public void Serialize(object classInstanceToSerialize, string directoryPath = "")
         {
             string className = classInstanceToSerialize.GetType().Name;
             string newDirectoryPath = Path.Combine(directoryPath, className);
             Directory.CreateDirectory(newDirectoryPath);
-            string json = JsonConvert.SerializeObject(classInstanceToSerialize);
+            string json = JsonConvert.SerializeObject(classInstanceToSerialize, serializerSettings);
 
             Serialize(json, newDirectoryPath);
         }
