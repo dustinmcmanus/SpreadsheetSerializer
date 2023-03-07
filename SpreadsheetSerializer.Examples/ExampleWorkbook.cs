@@ -6,5 +6,6 @@ namespace SpreadsheetSerializer.Examples
     {
         public List<User> Users { get; set; } //= new List<User>();
         public List<UserSetting> UserSettings { get; set; } //= new List<UserSetting>();
+        public List<GlobalSetting> GlobalSettings { get; set; }
     }
 }

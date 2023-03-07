@@ -1,15 +1,21 @@
-﻿using Newtonsoft.Json;
+﻿using Aspose.Cells;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 
 namespace SpreadsheetSerializer.AsposeCells
 {
     public class WorkbookDeserializer<T>
     {
-        private List<WorksheetDeserializer> worksheetDeserializers = new List<WorksheetDeserializer>();
         private JsonSerializerSettings serializerSettings = new JsonSerializerSettings();
+        private Dictionary<string, PropertyInfo> propertyInfoByName = new Dictionary<string, PropertyInfo>();
+        private T workbookClass;
 
         public WorkbookDeserializer<T> WithJsonSerializerSettings(JsonSerializerSettings settings)
         {
@@ -46,43 +52,66 @@ namespace SpreadsheetSerializer.AsposeCells
                 path += ".xlsx";
             }
 
-            T workbookClass = (T)Activator.CreateInstance(typeof(T));
-            worksheetDeserializers = GetWorksheetDeserializers(workbookClass);
+            workbookClass = (T)Activator.CreateInstance(typeof(T));
+            GetWorksheetDeserializers();
             DeserializeWorkboookFromFilePath(path);
             return workbookClass;
         }
 
         public T Deserialize(Stream asposeWorkbookStream)
         {
-            T workbookClass = (T)Activator.CreateInstance(typeof(T));
-            worksheetDeserializers = GetWorksheetDeserializers(workbookClass);
+            workbookClass = (T)Activator.CreateInstance(typeof(T));
+            GetWorksheetDeserializers();
             DeserializeWorkboookFromStream(asposeWorkbookStream);
             return workbookClass;
         }
 
-        private List<WorksheetDeserializer> GetWorksheetDeserializers(T workbookClass)
+        private void GetWorksheetDeserializers()
         {
-            List<WorksheetDeserializer> deserializers = new List<WorksheetDeserializer>();
             var propertyInfos = typeof(T).GetProperties();
             foreach (var propertyInfo in propertyInfos)
             {
-                string worksheetName = propertyInfo.Name;
                 Type propertyType = propertyInfo.PropertyType;
 
-                var genericListType = propertyType.GetGenericArguments()[0];
-                var propertyListValue = (IList)propertyInfo.GetValue(workbookClass);
-
-                if (propertyListValue == null)
+                if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(List<>))
                 {
-                    propertyListValue = CreateList(genericListType);
-                    propertyInfo.SetValue(workbookClass, propertyListValue);
+                    propertyInfoByName.Add(propertyInfo.Name, propertyInfo);
                 }
 
-                var worksheetCreator = new WorksheetDeserializer(worksheetName, propertyListValue, genericListType).WithJsonSerializerSettings(serializerSettings);
-                deserializers.Add(worksheetCreator);
+            }
+        }
+
+        private IList AddWorkbookRowsToList(Worksheet worksheet, PropertyInfo propertyInfo)
+        {
+            IList list = null;
+
+            string worksheetName = propertyInfo.Name;
+            Type propertyType = propertyInfo.PropertyType;
+
+            var genericListType = propertyType.GetGenericArguments()[0];
+            list = (IList)propertyInfo.GetValue(workbookClass);
+
+            using (DataTable dt = GetDataTable(worksheet, genericListType))
+            {
+                if (dt == null)
+                {
+                    list = null;
+                    return list;
+                }
+
+                if (list == null)
+                {
+                    list = CreateList(genericListType);
+                }
+
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    var obj = GetObjectFromDataTableRow(dt, i, genericListType);
+                    list.Add(obj);
+                }
             }
 
-            return deserializers;
+            return list;
         }
 
         private void DeserializeWorkboookFromFilePath(string workbookFilePath)
@@ -103,9 +132,13 @@ namespace SpreadsheetSerializer.AsposeCells
 
         private void PopulateWorkbookClassListsFromWorkbook(AsposeWorkbook workbook)
         {
-            foreach (var worksheetDeserializer in worksheetDeserializers)
+            foreach (var worksheet in workbook.Worksheets)
             {
-                worksheetDeserializer.Deserialize(workbook);
+                if (propertyInfoByName.TryGetValue(worksheet.Name, out var propertyInfo))
+                {
+                    var list = AddWorkbookRowsToList(worksheet, propertyInfo);
+                    propertyInfo.SetValue(workbookClass, list);
+                }
             }
         }
 
@@ -115,5 +148,29 @@ namespace SpreadsheetSerializer.AsposeCells
             Type listType = typeof(List<>).MakeGenericType(genericListType);
             return (IList)Activator.CreateInstance(listType);
         }
+
+        private DataTable GetDataTable(Worksheet sheet, Type genericListType)
+        {
+
+            int lastRow = sheet.Cells.Rows.Count;
+            int columnCount = genericListType.GetProperties().Length;
+            var options = new ExportTableOptions();
+            options.ExportColumnName = true;
+            options.ExportAsString = true;
+            return sheet.Cells.ExportDataTable(0, 0, lastRow, columnCount, options);
+        }
+
+        private object GetObjectFromDataTableRow(DataTable dt, int rowIndex, Type genericListType)
+        {
+            // adapted from https://stackoverflow.com/questions/43315700/json-net-how-to-serialize-just-one-row-from-a-datatable-object-without-it-being
+            string json = new JObject(
+                dt.Columns.Cast<DataColumn>()
+                    .Select(c => new JProperty(c.ColumnName, JToken.FromObject(dt.Rows[rowIndex][c])))
+            ).ToString(Formatting.None);
+
+            var obj = JsonConvert.DeserializeObject(json, genericListType, serializerSettings);
+            return obj;
+        }
+
     }
 }
